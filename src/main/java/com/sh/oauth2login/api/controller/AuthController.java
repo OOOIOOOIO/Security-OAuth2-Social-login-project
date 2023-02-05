@@ -46,17 +46,12 @@ public class AuthController {
      */
     @GetMapping("/login-success")
     public ResponseEntity<UserInfoResponseDto> loginSuccess(@RequestParam(name = "accessToken") String accessToken, @RequestParam(name = "refreshToken") String refreshToken){
-
-        /**
-         * body에 유저 정보 반환
-         *
-         * accessToken
-         * refreshToken
-         */
-        return ResponseEntity.ok()
-                .body(new UserInfoResponseDto(
-                        accessToken,
-                        refreshToken));
+        log.info("============ 소셜 로그인 성공 후 redirect ===============");
+//        return ResponseEntity.ok()
+//                .body(new UserInfoResponseDto(
+//                        accessToken,
+//                        refreshToken));
+        return new ResponseEntity<>(new UserInfoResponseDto(accessToken, refreshToken), HttpStatus.OK);
     }
 
 
@@ -175,7 +170,8 @@ public class AuthController {
                     .orElseThrow(() -> new TokenRefreshException(refreshToken, "Refresh token is not in database!"));
         }
 
-        return ResponseEntity.badRequest().body(new MessageResponseDto("Refresh Token is empty!"));
+//        return ResponseEntity.badRequest().body(new MessageResponseDto("Refresh Token is empty!"));
+        return new ResponseEntity<>(new MessageResponseDto("Refresh Token is empty!"), HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -204,7 +200,11 @@ public class AuthController {
         log.info("=========== access token 생성 : " + accessToken + " ===============");
 
 
-        return ResponseEntity.badRequest().body(new MessageResponseDto("Refresh Token is empty!"));
+//        return ResponseEntity.ok()
+//                .body(new UserInfoResponseDto(
+//                        accessToken,
+//                        refreshToken.getToken()));
+        return new ResponseEntity<>(new UserInfoResponseDto(accessToken, refreshToken.getToken()), HttpStatus.OK);
     }
 
 
