@@ -47,9 +47,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 //                String email = jwtUtils.getUserEmailFromJwtToken(jwt);
 
                 // payload 에서 가져오기
-                Map<String, Object> emailAndProvider = jwtUtils.getUserEmailAndProviderFromJwtToken(jwt);
-                String email = (String) emailAndProvider.get("email");
-                String provider = (String) emailAndProvider.get("provider");
+                Map<String, Object> claims = jwtUtils.getUserEmailAndProviderFromJwtToken(jwt);
+                String email = (String) claims.get("email");
+                String provider = (String) claims.get("provider");
 
 
                 UserDetails userDetails = userDetailsService.loadUserByUsernameAndProvider(email, provider); // db에서 유저 조회
