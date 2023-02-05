@@ -13,8 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserInfoResponseDto {
-    private String email;
-    private String provider;
     private String accessToken;
     private String refreshToken;
 }

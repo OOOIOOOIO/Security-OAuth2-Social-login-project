@@ -43,59 +43,18 @@ public class AuthController {
      * (handler에서 redirect 오는 uri)
      */
     @GetMapping("/login-success")
-    public ResponseEntity<Map<String, String>> loginSuccess(@RequestParam(name = "provider") String provider){
-
-        Map<String, String> result = new HashMap<>();
-        result.put("status", "success");
-        result.put("provider", provider);
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    /**
-     * Access
-     *
-     */
-    @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody OAuthLoginInfoDto oAuthLoginInfo) {
-
-
-        // refresh token 조회
-        Optional<RefreshToken> getRefreshToken = refreshTokenService.findByEmailAndProvider(oAuthLoginInfo.getEmail(), oAuthLoginInfo.getProvider());
-
-        // refresh token 존재한다면
-        if(getRefreshToken.isPresent()){
-            // 만료 시간 확인(유효할 경우 통과)
-            refreshTokenService.verifyExpiration(getRefreshToken.get());
-
-            // refreshToken 삭제
-            refreshTokenService.deleteByUserId(getRefreshToken.get());
-        }
-
-        // 존재하지 않을 경우
-
-        // refreshToken db 생성 및 저장
-        RefreshToken refreshToken =  refreshTokenService.createRefreshToken(oAuthLoginInfo.getEmail(), oAuthLoginInfo.getProvider());
-
-        // jwt 생성
-        String accessToken = jwtUtils.generateTokenFromEmailAndProvider(oAuthLoginInfo.getEmail(), oAuthLoginInfo.getProvider());
-
+    public ResponseEntity<UserInfoResponseDto> loginSuccess(@RequestParam(name = "accessToken") String accessToken, @RequestParam(name = "refreshToken") String refreshToken){
 
         /**
          * body에 유저 정보 반환
          *
-         * email
-         * provider
          * accessToken
          * refreshToken
          */
         return ResponseEntity.ok()
                 .body(new UserInfoResponseDto(
-                        oAuthLoginInfo.getEmail(),
-                        oAuthLoginInfo.getProvider(),
                         accessToken,
-                        refreshToken.getToken()));
-
+                        refreshToken));
     }
 
 

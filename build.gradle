@@ -28,6 +28,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation "com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.1" // log의 sql ? ? 에 어떤 값이 들어가는지 로그로 찍어준다.
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5' // 하이버네이트 proxy 문제 해결
+
+
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
