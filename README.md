@@ -15,4 +15,4 @@ Social Login(Google, Naver, Kakao) with OAuth2 &amp; JWT &amp; Spring Security &
 <hr>
 <br>
 
-[JWT 코드](https://github.com/OOOIOOOIO/Security-JWT-login-project) 리팩토링하여 oauth-client 라이브러리 사용해 소셜로그인 구현! 
+[JWT 코드](https://github.com/OOOIOOOIO/Security-JWT-login-project) 리팩토링하고 oauth-client 라이브러리 사용해 소셜로그인 구현! 
