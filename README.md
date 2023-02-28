@@ -1,5 +1,5 @@
 # Security-OAuth2-Social-login-project
-Social Login(Google, Naver, Kakao) with OAuth2 &amp; JWT &amp; Spring Security &amp; Spring boot by RESTful Style
+Social Login(Google, Naver Kakao) with RESTful Style using OAuth2 & JWT & Spring Security & Spring boot
 
 
 ## Project Spec
