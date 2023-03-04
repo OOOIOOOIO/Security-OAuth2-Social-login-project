@@ -19,7 +19,6 @@ public class CustomUserDetailsService {
 
     private final UserRepository userRepository;
 
-
     @Transactional
     public UserDetails loadUserByUsernameAndProvider(String email, String provider) throws UsernameNotFoundException {
         User user = userRepository.findByEmailAndProvider(email, provider)

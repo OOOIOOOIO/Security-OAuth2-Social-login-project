@@ -55,25 +55,20 @@ public class OAuth2AuthenticationSuccessHandlerImpl implements AuthenticationSuc
         log.info("=========== 이메일 : " + email + " ===============");
 
 
-        // refresh token 조회
-        Optional<RefreshToken> getRefreshToken = refreshTokenService.findByEmailAndProvider(email, provider);
-
-        // refresh token 존재한다면
-        if(getRefreshToken.isPresent()){
-            // 만료 시간 확인(유효할 경우 통과)
-            refreshTokenService.verifyExpiration(getRefreshToken.get());
-
-            // refreshToken 삭제
-            refreshTokenService.deleteByUserId(getRefreshToken.get());
-        }
-
-        // 존재하지 않을 경우
+//        // refresh token 조회
+//        Optional<RefreshToken> getRefreshToken = refreshTokenService.findByEmailAndProvider(email, provider);
+//
+//        // refresh token 존재한다면
+//        if(getRefreshToken.isPresent()){
+//            // 만료 시간 확인(유효할 경우 통과)
+//            refreshTokenService.verifyExpiration(getRefreshToken.get());
+//
 
         // refreshToken db 생성 및 저장
         RefreshToken refreshToken =  refreshTokenService.createRefreshToken(email, provider);
         log.info("=========== refresh token 생성 : " + refreshToken.getToken() + " ===============");
 
-        // jwt 생성
+        // access-token(jwt) 생성
         String accessToken = jwtUtils.generateTokenFromEmailAndProvider(email, provider);
         log.info("=========== access token 생성 : " + accessToken + " ===============");
 
@@ -83,6 +78,7 @@ public class OAuth2AuthenticationSuccessHandlerImpl implements AuthenticationSuc
                 .queryParam("accessToken", accessToken)
                 .queryParam("refreshToken", refreshToken.getToken())
                 .build().toUriString();
+
 
         response.sendRedirect(uri);
 

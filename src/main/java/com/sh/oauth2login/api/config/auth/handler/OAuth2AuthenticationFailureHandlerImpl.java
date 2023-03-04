@@ -17,7 +17,7 @@ public class OAuth2AuthenticationFailureHandlerImpl implements AuthenticationFai
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        log.info("=========== " + "소셜 로그인 성공" + " ===============");
+        log.info("=========== " + "소셜 로그인 실패" + " ===============");
 
         String[] path = request.getRequestURI().split("/");
 

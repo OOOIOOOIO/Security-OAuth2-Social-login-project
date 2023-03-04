@@ -40,8 +40,8 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/", "/favicon.ico").permitAll() // 소셜로그인 후 uri
-                .antMatchers("/api/auth/**","/auth/**", "/login/**", "/test/**").permitAll()// .antMathers().hasRole(권한), RestController
+                .antMatchers("/", "/favicon.ico", "/error").permitAll() // 소셜로그인 후 uri
+                .antMatchers("/api/auth/**","/auth/**", "/login/**", "/test/login").permitAll()// .antMathers().hasRole(권한), RestController
                 .antMatchers("/login/**").permitAll() // test Controller
                 .anyRequest().authenticated()
                 .and()

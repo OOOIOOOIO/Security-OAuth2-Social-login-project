@@ -7,6 +7,7 @@ import com.sh.oauth2login.api.repository.RefreshTokenRepository;
 import com.sh.oauth2login.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,13 +43,14 @@ public class RefreshTokenService {
      */
     @Transactional
     public RefreshToken createRefreshToken(String email, String provider) {
-        RefreshToken refreshToken = new RefreshToken();
 
-        Optional<User> user = userRepository.findByEmailAndProvider(email, provider);
+        User user = userRepository.findByEmailAndProvider(email, provider).orElseThrow(() -> new UsernameNotFoundException("User Not Found with email: " + email));
 
-        refreshToken.setUser(user.get());
-        refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenMin));
-        refreshToken.setToken(UUID.randomUUID().toString());
+        RefreshToken refreshToken = RefreshToken.builder()
+                .token(UUID.randomUUID().toString())
+                .expiryDate(Instant.now().plusMillis(refreshTokenMin))
+                .user(user)
+                .build();
 
         // db 저장
         RefreshToken saveRefreshToken = refreshTokenRepository.save(refreshToken);

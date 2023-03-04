@@ -1,14 +1,13 @@
 package com.sh.oauth2login.api.domain;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.Instant;
 
 @Getter
-@Setter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "REFRESH_TOKEN")
 public class RefreshToken {
 
@@ -25,4 +24,11 @@ public class RefreshToken {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Builder
+    public RefreshToken(String token, Instant expiryDate, User user) {
+        this.token = token;
+        this.expiryDate = expiryDate;
+        this.user = user;
+    }
 }

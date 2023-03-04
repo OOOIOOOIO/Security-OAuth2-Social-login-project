@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 비인증 유저일 경우 예외를 던져주는 클래스
+ * 인증 처리 과정에서(비인증 유저일 경우 등) 예외를 던져주는 클래스
  *
  * 401 error 발생
  *
@@ -28,7 +28,7 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException{
-        log.error("Unauthorized error : {} | reauest uri : {}", authException.getMessage(), request.getRequestURI());
+        log.error("Unauthorized error : {} | request uri : {}", authException.getMessage(), request.getRequestURI());
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 error

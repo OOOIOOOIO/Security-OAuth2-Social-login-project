@@ -149,6 +149,16 @@ public class JwtUtils {
                 .compact();
     }
 
+    public boolean verifyExpireMin(long expireMin){
+        Date date = new Date();
+
+        if(expireMin < date.getTime()){
+            log.info("========= access token 만료 =========");
+            return false;
+        }
+        return true;
+    }
+
 
 }
 
