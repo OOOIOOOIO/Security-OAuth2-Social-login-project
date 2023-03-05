@@ -28,7 +28,3 @@ public class CustomUserDetailsService {
     }
 
 }
-
-/**
- * 이제 social 로그인 후 success, fail시 어떻게 할 지 정하고 구현하면 됌
- */

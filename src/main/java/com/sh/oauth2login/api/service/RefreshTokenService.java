@@ -31,12 +31,6 @@ public class RefreshTokenService {
         return refreshTokenRepository.findByToken(token);
     }
 
-//    /**
-//     * 리프레쉬 토큰 userId 조회
-//     */
-//    public Optional<RefreshToken> findByUserId(Long userId) {
-//        return refreshTokenRepository.findByUser_UserId(userId);
-//    }
 
     /**
      * 리프레쉬 토큰 생성 및 저장

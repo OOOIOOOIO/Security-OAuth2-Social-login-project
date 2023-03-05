@@ -48,12 +48,10 @@ public class AuthController {
     @GetMapping("/login-success")
     public ResponseEntity<UserInfoResponseDto> loginSuccess(@RequestParam(name = "accessToken") String accessToken, @RequestParam(name = "refreshToken") String refreshToken){
         log.info("============ 소셜 로그인 성공 후 redirect ===============");
-//        return ResponseEntity.ok()
-//                .body(new UserInfoResponseDto(
-//                        accessToken,
-//                        refreshToken));
+
         return new ResponseEntity<>(new UserInfoResponseDto(accessToken, refreshToken), HttpStatus.OK);
     }
+
 
 
 
@@ -61,7 +59,7 @@ public class AuthController {
      * Access token 만료
      * J005 일 때
      * J002 ~ J004 -> 다시 로그인 시키자!
-     * 토큰 만료 시 Access token 재발급 API
+     * 토큰 만료 시 Access token
      *
      */
     @PostMapping("/re-access-token")
@@ -120,97 +118,8 @@ public class AuthController {
         log.info("=========== access token 생성 : " + accessToken + " ===============");
 
 
-//        return ResponseEntity.ok()
-//                .body(new UserInfoResponseDto(
-//                        accessToken,
-//                        refreshToken.getToken()));
         return new ResponseEntity<>(new UserInfoResponseDto(accessToken, refreshToken.getToken()), HttpStatus.OK);
     }
-
-
-
-//    /**
-//     * 회원가입(role 필수)
-//     *
-//     * 기존 사용자 이름/이메일 확인
-//     * 새 사용자 생성(역할을 지정하지 않은 경우 ROLE_USER 사용)
-//     * UserRepository를 사용하여 사용자를 데이터베이스에 저장
-//     */
-//    @PostMapping("/signup")
-//    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequestDto signUpRequestDto) {
-//
-//        // 유효성 검사
-//        // username
-//        if (userRepository.existsByUsername(signUpRequestDto.getUsername())) {
-//            return ResponseEntity.badRequest().body(new MessageResponseDto("ERROR : USERNAME IS ALREADY TAKEN")); // 400 error
-//        }
-//        // email
-//        if (userRepository.existsByEmail(signUpRequestDto.getEmail())) {
-//            return ResponseEntity.badRequest().body(new MessageResponseDto("Error: Email is already in use!"));
-//        }
-//
-//        // 유저 생성
-//        User user = new User(signUpRequestDto.getUsername(),
-//                signUpRequestDto.getEmail(),
-//                encoder.encode(signUpRequestDto.getPassword()));
-//
-//        Set<String> strRoles = signUpRequestDto.getRole();
-//
-//        Set<Role> roles = new HashSet<>();
-//
-//        if (strRoles == null) {
-//            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-//                    .orElseThrow(() -> new RuntimeException("ERROR : ROLE IS NOT FOUND"));
-//
-//            roles.add(userRole);
-//        } else {
-//            strRoles.forEach(role -> {
-//                switch (role) {
-//                    case "admin":
-//                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-//                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//                        roles.add(adminRole);
-//
-//                        break;
-//                    case "mod":
-//                        Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
-//                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//                        roles.add(modRole);
-//
-//                        break;
-//                    default:
-//                        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-//                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//                        roles.add(userRole);
-//                }
-//            });
-//        }
-//
-//        user.setRoles(roles);
-//        userRepository.save(user);
-//
-//        return ResponseEntity.ok(new MessageResponseDto("USER REGISTERED SUCCESSFULLY!"));
-//
-//    }
-//
-//    /**
-//     * 로그아웃
-//     * 리프레쉬 토큰 삭제
-//     */
-//    @PostMapping("signout")
-//    public ResponseEntity<?> logoutUser(){
-//
-//        Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//
-//        if (principle.toString() != "anonymousUser") {
-//            Long userId = ((UserDetailsImpl) principle).getUserId();
-//            refreshTokenService.deleteByUserId(userId);
-//        }
-//
-//        return ResponseEntity.ok()
-//                .body(new MessageResponseDto("You've been signed out!"));
-//    }
-
 
 
 }

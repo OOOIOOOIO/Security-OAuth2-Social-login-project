@@ -88,8 +88,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     /**
      * request header에서 jwt(xxx.xxx.xxx) 조회
-     * <p>
-     * header 이름 : jwt-auth-token
+     * header 이름 : access-token
      */
     private String parseJwt(HttpServletRequest request) {
 

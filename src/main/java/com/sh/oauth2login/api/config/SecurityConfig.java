@@ -1,7 +1,6 @@
 package com.sh.oauth2login.api.config;
 
 import com.sh.oauth2login.api.config.auth.CustomOAuth2UserService;
-import com.sh.oauth2login.api.config.auth.handler.OAuth2AuthenticationFailureHandlerImpl;
 import com.sh.oauth2login.api.config.auth.handler.OAuth2AuthenticationSuccessHandlerImpl;
 import com.sh.oauth2login.api.config.jwt.AuthEntryPointJwt;
 import com.sh.oauth2login.api.config.jwt.AuthTokenFilter;
@@ -28,7 +27,7 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
 
     private final OAuth2AuthenticationSuccessHandlerImpl oAuth2AuthenticationSuccessHandler;
-    private final OAuth2AuthenticationFailureHandlerImpl oAuth2AuthenticationFailureHandler;
+//    private final OAuth2AuthenticationFailureHandlerImpl oAuth2AuthenticationFailureHandler;
 
 
     @Bean
@@ -47,7 +46,7 @@ public class SecurityConfig {
                 .and()
                 .oauth2Login()
                 .successHandler(oAuth2AuthenticationSuccessHandler)
-                .failureHandler(oAuth2AuthenticationFailureHandler)
+//                .failureHandler(oAuth2AuthenticationFailureHandler)
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService); // 실행순서 : userInfoEndpoint().userService -> successHandler()
         

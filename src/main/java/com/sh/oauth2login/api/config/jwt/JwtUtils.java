@@ -31,40 +31,25 @@ public class JwtUtils {
     private Long expireMin;
 
     /**
-     * header에서 jwt-access 가져오기
-     * header 이름 : jwt-auth-token
+     * header에서  access-token
+     * header 이름 :access-token
      */
     public String getJwtFromHeader(HttpServletRequest request) {
 
-        return request.getHeader("jwt-auth-token");
+        return request.getHeader("access-token");
     }
 
     /**
-     * header에서 jwt-refresh 가져오기
-     * header 이름 : jwt-auth-refresh-token
+     * header에서 refresh-token 가져오기
+     * header 이름 : refresh-token
      */
     public String getJwtRefreshFromHeader(HttpServletRequest request) {
-        return request.getHeader("jwt-auth-refresh-token");
+        return request.getHeader("refresh-token");
     }
 
 
 
     /**
-     * (구-폼)
-     * JWT에서 정보 가져오기(email)
-     * subject : email(헤더이름)
-     */
-//    public String getUserEmailFromJwtToken(String token) {
-//        return Jwts.parserBuilder()
-//                .setSigningKey(secret.getBytes()) // signature를 secrete key로 설정했는지, publickey로 설정했는지 확인! 나는 secret key로 설정
-//                .build()
-//                .parseClaimsJws(token)
-//                .getBody() // getBody == claims(payload) 가져오기
-//                .getSubject();
-//    }
-
-    /**
-     * (신-소셜)
      * JWT에서 정보 가져오기
      * payload : email, provider
      */
@@ -103,31 +88,8 @@ public class JwtUtils {
     }
 
 
-    /**
-     * (구-폼)
-     * JWT 토큰 생성
-     * subject :username
-     */
-//    public String generateTokenFromEmail(String email, String provider) {
-//        Key key = Keys.hmacShaKeyFor(secret.getBytes());
-//        Map<String, String> payloads = new HashMap<>();
-//        payloads.put("email", email);
-//        payloads.put("provider", provider);
-//
-//
-//        return Jwts.builder()
-//                .setHeaderParam("typ", "JWT")
-//                .setHeaderParam("alg", "HS256")
-//                .setSubject(email+","+provider)
-//                .setClaims(payloads)
-//                .setIssuedAt(new Date())
-//                .setExpiration(new Date((new Date()).getTime() + expireMin))
-//                .signWith(key, SignatureAlgorithm.HS256)
-//                .compact();
-//    }
 
     /**
-     * (신-소셜)
      * JWT 토큰 생성
      * payload : email, provider
      */

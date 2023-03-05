@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletException;
@@ -74,13 +75,13 @@ public class OAuth2AuthenticationSuccessHandlerImpl implements AuthenticationSuc
 
 
         String uri = UriComponentsBuilder.fromUriString("http://localhost:9999/api/auth/login-success")
-
                 .queryParam("accessToken", accessToken)
                 .queryParam("refreshToken", refreshToken.getToken())
                 .build().toUriString();
 
 
         response.sendRedirect(uri);
+
 
 
 
