@@ -2,6 +2,7 @@ package com.sh.oauth2login.api.exception.controlleradvice;
 
 import com.sh.oauth2login.api.exception.ErrorMessage;
 import com.sh.oauth2login.api.exception.errorcode.JwtCustomErrorCode;
+import com.sh.oauth2login.api.exception.type.TokenNotFoundException;
 import com.sh.oauth2login.api.exception.type.TokenRefreshException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,6 +28,18 @@ public class TokenControllerAdvice {
         // 여기서 body 보내고 흠흠
         return new ErrorMessage(
                 JwtCustomErrorCode.TokenRefreshException.code(),
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false));
+    }
+
+    @ExceptionHandler(value = TokenNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST) // 400에러
+    public ErrorMessage handleTokenNotFoundException(TokenRefreshException ex, WebRequest request) {
+
+        // 여기서 body 보내고 흠흠
+        return new ErrorMessage(
+                JwtCustomErrorCode.TokenNotFoundException.code(),
                 new Date(),
                 ex.getMessage(),
                 request.getDescription(false));

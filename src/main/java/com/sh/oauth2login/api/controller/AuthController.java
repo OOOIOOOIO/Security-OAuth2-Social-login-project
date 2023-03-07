@@ -7,6 +7,7 @@ import com.sh.oauth2login.api.controller.dto.response.auth.ReAccessTokenResponse
 import com.sh.oauth2login.api.controller.dto.response.auth.UserInfoResponseDto;
 import com.sh.oauth2login.api.domain.RefreshToken;
 import com.sh.oauth2login.api.exception.ErrorMessage;
+import com.sh.oauth2login.api.exception.type.TokenNotFoundException;
 import com.sh.oauth2login.api.exception.type.TokenRefreshException;
 import com.sh.oauth2login.api.repository.UserRepository;
 import com.sh.oauth2login.api.service.RefreshTokenService;
@@ -72,36 +73,42 @@ public class AuthController {
         // 존재한다면(시간 비교)
         if ((refreshToken != null) && (refreshToken.length() > 0)) {
 
-            // db 조회
-            return refreshTokenService.findByToken(refreshToken)
-                    .map(token -> refreshTokenService.verifyExpiration(token)) // 만료시간 검증 : db에서 삭제 후 403 error
-                    .map(refreshToken1 -> refreshToken1.getUser()) // 만료가 아닐 경우 그대로 토큰 리턴
-                    .map(user -> {
-                        // accessToken 재생성
-                        String accessToken = jwtUtils.generateTokenFromEmailAndProvider(user.getEmail(), user.getProvider()); // lazy 로딩
-                        log.info("=========== access token 생성 : " + accessToken + " ===============");
+            // access token을 통해 유저 정보 조회
+            String jwt = jwtUtils.getJwtFromHeader(request);
+            Map<String, Object> claims = jwtUtils.getUserEmailAndProviderFromJwtToken(jwt);
 
-                        // access token 리턴
-                        return new ResponseEntity<>(new ReAccessTokenResponseDto("Token is refreshed successfully!", accessToken), HttpStatus.OK);
-                    })
-                    .orElseThrow(() -> new TokenRefreshException(refreshToken, "Refresh token is not in database!"));
+            String email = (String) claims.get("email");
+            String provider = (String) claims.get("provider");
+
+            // refresh token db 조회 및 검증
+            RefreshToken getRefreshToken = refreshTokenService.findByToken(refreshToken).orElseThrow(() -> new TokenNotFoundException(refreshToken, "Refresh token is not in database!"));
+            refreshTokenService.verifyExpiration(getRefreshToken);
+
+            String accessToken = jwtUtils.generateTokenFromEmailAndProvider(email, provider);
+            log.info("=========== access token 생성 : " + accessToken + " ===============");
+
+            return new ResponseEntity<>(new ReAccessTokenResponseDto("Token is refreshed successfully!", accessToken), HttpStatus.OK);
+
+
+
         }
-        log.info("=============== refresh token is empty ===============");
 
-//        return ResponseEntity.badRequest().body(new MessageResponseDto("Refresh Token is empty!"));
+        log.info("=============== refresh token이 비어있습니다. ===============");
+
         return new ResponseEntity<>(new ErrorMessage("J001", new Date(), "Refresh Token is empty!", "api/auth/re-access-token"), HttpStatus.BAD_REQUEST);
     }
 
     /**
      * Refresh Token 만료
      *
-     * J001 일 때
+     * J001, J006 일 때
      * 403 에러 타기 전 db에서 삭제됨
      */
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(HttpServletRequest request) {
         log.info("======== refresh token 만료 ==========");
 
+        // access token을 통해 유저 정보 조회
         String jwt = jwtUtils.getJwtFromHeader(request);
         Map<String, Object> claims = jwtUtils.getUserEmailAndProviderFromJwtToken(jwt);
 
