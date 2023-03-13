@@ -1,7 +1,5 @@
 package com.sh.oauth2login.api.exception.errorcode;
 
-import com.sh.oauth2login.api.exception.type.TokenNotFoundException;
-
 public enum JwtCustomErrorCode {
     // security
     UsernameNotFoundException("S001"),

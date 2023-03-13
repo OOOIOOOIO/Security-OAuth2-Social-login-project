@@ -1,31 +1,20 @@
 package com.sh.oauth2login.api.controller;
 
 import com.sh.oauth2login.api.config.jwt.JwtUtils;
-import com.sh.oauth2login.api.controller.dto.request.OAuthLoginInfoDto;
-import com.sh.oauth2login.api.controller.dto.response.auth.MessageResponseDto;
 import com.sh.oauth2login.api.controller.dto.response.auth.ReAccessTokenResponseDto;
 import com.sh.oauth2login.api.controller.dto.response.auth.UserInfoResponseDto;
 import com.sh.oauth2login.api.domain.RefreshToken;
 import com.sh.oauth2login.api.exception.ErrorMessage;
-import com.sh.oauth2login.api.exception.type.TokenNotFoundException;
-import com.sh.oauth2login.api.exception.type.TokenRefreshException;
-import com.sh.oauth2login.api.repository.UserRepository;
+import com.sh.oauth2login.api.exception.type.RefreshTokenNotFoundException;
 import com.sh.oauth2login.api.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 //@CrossOrigin(origins = "*", maxAge = 3600) // 60분
@@ -81,7 +70,7 @@ public class AuthController {
             String provider = (String) claims.get("provider");
 
             // refresh token db 조회 및 검증
-            RefreshToken getRefreshToken = refreshTokenService.findByToken(refreshToken).orElseThrow(() -> new TokenNotFoundException(refreshToken, "Refresh token is not in database!"));
+            RefreshToken getRefreshToken = refreshTokenService.findByToken(refreshToken).orElseThrow(() -> new RefreshTokenNotFoundException(refreshToken, "Refresh token is not in database!"));
             refreshTokenService.verifyExpiration(getRefreshToken);
 
             String accessToken = jwtUtils.generateTokenFromEmailAndProvider(email, provider);

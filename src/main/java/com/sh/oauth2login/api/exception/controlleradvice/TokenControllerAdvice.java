@@ -2,8 +2,8 @@ package com.sh.oauth2login.api.exception.controlleradvice;
 
 import com.sh.oauth2login.api.exception.ErrorMessage;
 import com.sh.oauth2login.api.exception.errorcode.JwtCustomErrorCode;
-import com.sh.oauth2login.api.exception.type.TokenNotFoundException;
-import com.sh.oauth2login.api.exception.type.TokenRefreshException;
+import com.sh.oauth2login.api.exception.type.RefreshTokenNotFoundException;
+import com.sh.oauth2login.api.exception.type.RefreshTokenExpiredException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -21,9 +21,9 @@ import java.util.Date;
 @RestControllerAdvice
 public class TokenControllerAdvice {
 
-    @ExceptionHandler(value = TokenRefreshException.class)
+    @ExceptionHandler(value = RefreshTokenExpiredException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN) // 403에러
-    public ErrorMessage handleTokenRefreshException(TokenRefreshException ex, WebRequest request) {
+    public ErrorMessage handleTokenRefreshException(RefreshTokenExpiredException ex, WebRequest request) {
 
         // 여기서 body 보내고 흠흠
         return new ErrorMessage(
@@ -33,9 +33,9 @@ public class TokenControllerAdvice {
                 request.getDescription(false));
     }
 
-    @ExceptionHandler(value = TokenNotFoundException.class)
+    @ExceptionHandler(value = RefreshTokenNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST) // 400에러
-    public ErrorMessage handleTokenNotFoundException(TokenRefreshException ex, WebRequest request) {
+    public ErrorMessage handleTokenNotFoundException(RefreshTokenExpiredException ex, WebRequest request) {
 
         // 여기서 body 보내고 흠흠
         return new ErrorMessage(

@@ -2,7 +2,7 @@ package com.sh.oauth2login.api.service;
 
 import com.sh.oauth2login.api.domain.RefreshToken;
 import com.sh.oauth2login.api.domain.User;
-import com.sh.oauth2login.api.exception.type.TokenRefreshException;
+import com.sh.oauth2login.api.exception.type.RefreshTokenExpiredException;
 import com.sh.oauth2login.api.repository.RefreshTokenRepository;
 import com.sh.oauth2login.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -59,7 +59,7 @@ public class RefreshTokenService {
     public RefreshToken verifyExpiration(RefreshToken token) {
         if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
             refreshTokenRepository.delete(token);
-            throw new TokenRefreshException(token.getToken(), "Refresh token was expired. Please make a new signin request");
+            throw new RefreshTokenExpiredException(token.getToken(), "Refresh token was expired. Please make a new signin request");
         }
 
         return token;

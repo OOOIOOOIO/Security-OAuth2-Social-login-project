@@ -1,9 +1,7 @@
 package com.sh.oauth2login.api.config.jwt;
 
 import com.sh.oauth2login.api.config.auth.CustomUserDetailsService;
-import com.sh.oauth2login.api.domain.RefreshToken;
-import com.sh.oauth2login.api.exception.type.JwtTokenExpiredException;
-import com.sh.oauth2login.api.exception.type.TokenRefreshException;
+import com.sh.oauth2login.api.exception.type.RefreshTokenExpiredException;
 import com.sh.oauth2login.api.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * doFilterInternal() 내부에서 수행하는 작업:
@@ -42,29 +39,24 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Override
 
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
         // request : 헤더에서 넘어오는 JWT
-        String jwt = parseJwt(request);
+        String authToken = jwtUtils.getJwtFromHeader(request);
 
-        // jwt 토큰(access token) 검사
-        if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
+        // authToken 토큰(access token) 검사
+        if (authToken != null && jwtUtils.validateJwtToken(authToken)) {
 
             // refresh token 만료시간 검증
             String jwtRefreshFromHeader = jwtUtils.getJwtRefreshFromHeader(request);
-            refreshTokenService.verifyExpiration(refreshTokenService.findByToken(jwtRefreshFromHeader).orElseThrow(() -> new TokenRefreshException(jwtRefreshFromHeader, "Refresh token is not in database!")));
+            refreshTokenService.verifyExpiration(refreshTokenService.findByToken(jwtRefreshFromHeader).orElseThrow(() -> new RefreshTokenExpiredException(jwtRefreshFromHeader, "Refresh token is not in database!")));
 
 
             // payload 에서 가져오기
-            Map<String, Object> claims = jwtUtils.getUserEmailAndProviderFromJwtToken(jwt);
+            Map<String, Object> claims = jwtUtils.getUserEmailAndProviderFromJwtToken(authToken);
             String email = (String) claims.get("email");
             String provider = (String) claims.get("provider");
-            long expireMin = (long) claims.get("exp");
 
             // access token 만료시간 검사
-            if(!jwtUtils.verifyExpireMin(expireMin)){
-                throw new JwtTokenExpiredException("JWT token is expired");
-            }
-
+            jwtUtils.verifyExpireMin(authToken);
 
             UserDetails userDetails = userDetailsService.loadUserByUsernameAndProvider(email, provider); // db에서 유저 조회
 
@@ -86,15 +78,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    /**
-     * request header에서 jwt(xxx.xxx.xxx) 조회
-     * header 이름 : access-token
-     */
-    private String parseJwt(HttpServletRequest request) {
 
-        // header에서 xxx.xxx.xxx 가져오기
-        String jwt = request.getHeader("jwt-auth-token");
 
-        return jwt;
-    }
 }
