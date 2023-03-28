@@ -47,23 +47,13 @@ public class OAuth2AuthenticationSuccessHandlerImpl implements AuthenticationSuc
             email = (String) attributes.get("email");
         }
         else{
-            Map<String, ?> attributesKakaoAcount = (Map)attributes.get("kakao_account");
-            email = (String) attributesKakaoAcount.get("email");
+            Map<String, ?> attributesKakaoAccount = (Map)attributes.get("kakao_account");
+            email = (String) attributesKakaoAccount.get("email");
 
         }
 
         log.info("=========== " + provider + " 소셜 로그인 성공" + " ===============");
         log.info("=========== 이메일 : " + email + " ===============");
-
-
-//        // refresh token 조회
-//        Optional<RefreshToken> getRefreshToken = refreshTokenService.findByEmailAndProvider(email, provider);
-//
-//        // refresh token 존재한다면
-//        if(getRefreshToken.isPresent()){
-//            // 만료 시간 확인(유효할 경우 통과)
-//            refreshTokenService.verifyExpiration(getRefreshToken.get());
-//
 
         // refreshToken db 생성 및 저장
         RefreshToken refreshToken =  refreshTokenService.createRefreshToken(email, provider);

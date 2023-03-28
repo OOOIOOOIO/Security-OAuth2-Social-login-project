@@ -1,18 +1,19 @@
 package com.sh.oauth2login.api.exception.errorcode;
 
-public enum JwtCustomErrorCode {
+public enum AuthCustomErrorCode {
     // security
-    UsernameNotFoundException("S001"),
-    UnauthorizedException("S002"),
+    UsernameNotFoundException("A001"),
+    UnauthorizedException("A002"),
 
     // jwt
-    TokenRefreshException("J001"),
+    RefreshTokenExpiredException("J001"),
     UnsupportedJwtException("J002"),
     MalformedJwtException("J003"),
     SignatureException("J004"),
     JwtTokenExpiredException("J005"),
-    TokenNotFoundException("J006"),
-    IllegalArgumentException("C001");
+    RefreshTokenNotFoundException("J006");
+
+
 
 
 
@@ -20,7 +21,7 @@ public enum JwtCustomErrorCode {
 
     private String errorCode;
 
-    JwtCustomErrorCode(String errorCode) {
+    AuthCustomErrorCode(String errorCode) {
         this.errorCode = errorCode;
     }
     public String code(){

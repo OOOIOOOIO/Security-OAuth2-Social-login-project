@@ -1,7 +1,7 @@
 package com.sh.oauth2login.api.config.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sh.oauth2login.api.exception.errorcode.JwtCustomErrorCode;
+import com.sh.oauth2login.api.exception.errorcode.AuthCustomErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
@@ -34,7 +34,7 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 error
 
         final Map<String, Object> body = new HashMap<>();
-        body.put("errorCode", JwtCustomErrorCode.UnauthorizedException.code()); // S002
+        body.put("errorCode", AuthCustomErrorCode.UnauthorizedException.code()); // S002
         body.put("date", new Date());
         body.put("message", authException.getMessage());
         body.put("request", request.getRequestURI());

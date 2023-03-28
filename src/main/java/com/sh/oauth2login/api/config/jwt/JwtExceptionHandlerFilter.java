@@ -1,9 +1,13 @@
 package com.sh.oauth2login.api.config.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sh.oauth2login.api.exception.errorcode.JwtCustomErrorCode;
+import com.sh.oauth2login.api.exception.errorcode.AuthCustomErrorCode;
+import com.sh.oauth2login.api.exception.errorcode.GlobalCustomErrorCode;
 import com.sh.oauth2login.api.exception.type.JwtTokenExpiredException;
+import com.sh.oauth2login.api.exception.type.RefreshTokenExpiredException;
+import com.sh.oauth2login.api.exception.type.RefreshTokenNotFoundException;
 import io.jsonwebtoken.security.SignatureException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
@@ -22,6 +26,7 @@ import io.jsonwebtoken.UnsupportedJwtException;
 
 
 @Component
+@Slf4j
 public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
 
     @Override
@@ -30,17 +35,29 @@ public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (SignatureException e) {
-            errorResponse(request, response, e, JwtCustomErrorCode.SignatureException.code());
+            log.error(e.getMessage());
+            errorResponse(request, response, e, AuthCustomErrorCode.SignatureException.code());
         } catch (MalformedJwtException e) {
-            errorResponse(request, response, e, JwtCustomErrorCode.MalformedJwtException.code());
+            log.error(e.getMessage());
+            errorResponse(request, response, e, AuthCustomErrorCode.MalformedJwtException.code());
         } catch (JwtTokenExpiredException e) {
-            errorResponse(request, response, e, JwtCustomErrorCode.JwtTokenExpiredException.code());
+            log.error(e.getMessage());
+            errorResponse(request, response, e, AuthCustomErrorCode.JwtTokenExpiredException.code());
         } catch (UnsupportedJwtException e) {
-            errorResponse(request, response, e, JwtCustomErrorCode.UnsupportedJwtException.code());
+            log.error(e.getMessage());
+            errorResponse(request, response, e, AuthCustomErrorCode.UnsupportedJwtException.code());
         } catch (IllegalArgumentException e) {
-            errorResponse(request, response, e, JwtCustomErrorCode.IllegalArgumentException.code());
+            log.error(e.getMessage());
+            errorResponse(request, response, e, GlobalCustomErrorCode.IllegalArgumentException.code());
         } catch (UsernameNotFoundException e) {
-            errorResponse(request, response, e, JwtCustomErrorCode.UsernameNotFoundException.code());
+            log.error(e.getMessage());
+            errorResponse(request, response, e, AuthCustomErrorCode.UsernameNotFoundException.code());
+        } catch (RefreshTokenNotFoundException e) {
+            log.error(e.getMessage());
+            errorResponse(request, response, e, AuthCustomErrorCode.RefreshTokenNotFoundException.code());
+        } catch (RefreshTokenExpiredException e) {
+            log.error(e.getMessage());
+            errorResponse(request, response, e, AuthCustomErrorCode.RefreshTokenExpiredException.code());
         }
     }
 
