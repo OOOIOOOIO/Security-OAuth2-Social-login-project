@@ -1,6 +1,6 @@
 package com.sh.oauth2login.api.resolver;
 
-import com.gdsc.wero.global.auth.jwt.JwtUtils;
+import com.sh.oauth2login.api.config.jwt.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
